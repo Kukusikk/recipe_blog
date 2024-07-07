@@ -1,0 +1,29 @@
+services:
+  db:
+    image: postgres
+    volumes:
+      - recipe_blog_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: recipe_blog
+
+  app:
+    build: .
+    command: 
+      - pip install -r requirements.txt
+      - python manage.py migrate
+      # - python manage.py runserver 0.0.0.0:8000
+    container_name: dlog
+    working_dir: /current
+    depends_on:
+      - db
+    ports:
+      - 8000:8000
+    tty: true
+    stdin_open: true
+    volumes:
+      - .:/current
+
+
+volumes:
+  recipe_blog_data:
